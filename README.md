@@ -1,9 +1,11 @@
 # Git-comp
-### GitComp Team Project: Shared Expense Settlement System, FAIRLY
+- Git컴프 팀프로젝트: 공동 비용 정산 시스템, FAIRLY
 
-### Please ensure your commits strictly follow the structure learned in class:
-[Type](Optional Scope): [Subject]
+- **절대!!! 임의로 main 브랜치를 건들지 마세요**
 
-[Optional Body]
+- **반드시** 개인 브랜치에서 작업 후 push해주시고, merge담당자에게 merge 요청을 하세요.
 
-[Optional Footer]
+- 수업시간에 배운 커밋 구조를 준수해서 커밋해주세요. (커밋은 영어로 작성해주세요.)
+	- 08-오픈소스SW GIT 개요 및 GitHub 기본 사용법-2026학년도 {좋은 커밋 메시지 작성법}
+  
+- 변수명은 알아보기 쉽게 작성에 유의해주세요.
