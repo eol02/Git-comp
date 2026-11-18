@@ -13,7 +13,9 @@ typedef struct Event {
 } Event;
 
 extern char members[MAX_MEMBERS][20];   //전체 멤버 배열
+extern int eventCost[MAX_EVENTS];  //이벤트별 금액 합산 배열
 
-int* calculate(struct Event* event, int memberCount, int eventCount);
+//Calculation.c
+int calculate(struct Event* event, int memberCount, int eventCount);
 
 #endif

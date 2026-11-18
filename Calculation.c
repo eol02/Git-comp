@@ -1,10 +1,12 @@
 #include "common.h"
 
-int totalCost[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
+static int totalCost[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
+int eventCost[MAX_EVENTS] = {0};
 
-int* calculate(struct Event* event, int memberCount, int eventCount) {    //이벤트별 금액 합산
-    int eventCost[MAX_EVENTS] = {0};  //이벤트별 금액 합산 배열
+int calculate(struct Event* event, int memberCount, int eventCount) {    //금액 합산
     int total = 0;
+
+    for(int i = 0; i < memberCount; i++) totalCost[i] = 0;  //각 멤버별 송금 관계 초기화
 
     for (int i = 0; i < eventCount; i++) {
         total = 0;
@@ -23,7 +25,7 @@ int* calculate(struct Event* event, int memberCount, int eventCount) {    //이�
         }
     }
 
-    return eventCost;
+    return 0;
 }
 
 // int optimizeTransfers(struct Event* event, int eventCount, int memberCount) {  //송금 관계 최적화
