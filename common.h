@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #define MAX_MEMBERS 100
+#define MAX_EVENTS 100
 
 /*---------------이벤트 구조체 정의----------------*/
 typedef struct Event {
