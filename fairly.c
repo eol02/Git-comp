@@ -12,8 +12,10 @@ struct Event {
 char members[MAX][20]; // 전체 멤버
 struct Event events[MAX]; // 이벤트 구조체 배열
 int event_count = 0; // 만든 이벤트 개수
+int member_count = 0; // 전체 인원 수
 
-void create_event(char title[], int payer, int members_idx[], int checks, int costs[]);
+int create_event(char title[], int payer, int members_idx[], int checks, int costs[]);
+int add_member(char name[]);
 
 int main() {
     return 0;
@@ -24,7 +26,7 @@ int main() {
 - members_idx[]: ui에서 체크된 인원의 인덱스 번호들(ex.{1,2,4})
 - costs[]: members_idx와 같은 순서로 배치된 각각의 금액(ex.{1000,2000,4000}, 즉 1:1000원, 2:2000원, 4:4000원)
 */
-void create_event(char title[], int payer, int members_idx[], int checks, int costs[]) {
+int create_event(char title[], int payer, int members_idx[], int checks, int costs[]) {
     int idx = event_count++; // 새로운 이벤트 인덱스 할당 및 개수 증가
 
     strcpy(events[idx].title, title); // title 지정
@@ -36,4 +38,9 @@ void create_event(char title[], int payer, int members_idx[], int checks, int co
         events[idx].participants[m_idx] = 1;
         events[idx].costs[m_idx] = costs[i];
     }
+}
+
+int add_member(char name[]) {
+    int idx = member_count++;
+    strcpy(members[idx], name);
 }
