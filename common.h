@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #define MAX_MEMBERS 100
+#define MAX_EVENTS 100
 
 /*---------------이벤트 구조체 정의----------------*/
 typedef struct Event {
@@ -12,5 +13,7 @@ typedef struct Event {
 } Event;
 
 extern char members[MAX_MEMBERS][20];   //전체 멤버 배열
+
+int* calculate(struct Event* event, int memberCount, int eventCount);
 
 #endif
