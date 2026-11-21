@@ -16,7 +16,24 @@ int WINAPI wWinMain(
 	wc.hInstance = hInstance;
 	wc.lpszClassName = MAIN_CLASS;
 
+	RegisterClass(&wc);
 
+	HWND main_hwnd = CreateWindowExW(		//메인 창 생성
+		0,
+		MAIN_CLASS,
+		NULL,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		600,
+		800,
+		NULL,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	ShowWindow(main_hwnd, SW_SHOW);
 }
 
 LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
