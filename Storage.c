@@ -4,13 +4,13 @@
 
 
 // ================== 데이터 저장 함수 ==========================
-void saveData(const char* filename) {
+int saveData(const char* filename) {
 
     FILE* fp = fopen(filename, "w");
 
     if (fp == NULL) {
         printf("[ERROR] 파일을 열 수 없습니다: %s\n", filename);
-        return;
+        return 0;
     }
 
     // 1. 전체 멤버 정보 저장
@@ -49,6 +49,7 @@ void saveData(const char* filename) {
     fclose(fp);
 
     printf("[저장 완료] %s\n", filename);
+    return 1;
 }
 
 // =================데이터 불러오기 함수==========================
@@ -77,10 +78,8 @@ int loadData(const char* filename) {
 
     fscanf(fp, "%d", &event_count);
 
-
     for (int i = 0; i < event_count; i++) {
 
-        
         fscanf(fp, "%99s", events[i].title);
 
         fscanf(fp, "%d", &events[i].payer);
