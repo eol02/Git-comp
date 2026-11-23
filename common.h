@@ -12,6 +12,13 @@ typedef struct Event {
     int cost[MAX_MEMBERS];      //멤버별 소비한 금액 (인덱스 동기화)
 } Event;
 
+/*---------------송금 내역 구조체 정의----------------*/
+typedef struct Transfer {
+    int from;    //보내는 멤버 인덱스
+    int to;      //받는 멤버 인덱스
+    int amount;  //송금 금액
+} Transfer;
+
 extern char members[MAX_MEMBERS][20];   //전체 멤버 배열
 extern int eventCost[MAX_EVENTS];  //이벤트별 총 결제 금액 배열
 
