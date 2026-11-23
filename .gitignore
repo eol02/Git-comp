@@ -429,3 +429,6 @@ FodyWeavers.xsd
 
 # Executables
 *.exe
+/Git-comp.sln
+/Git-comp.vcxproj
+/Git-comp.vcxproj.filters

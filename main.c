@@ -33,7 +33,18 @@ int WINAPI wWinMain(
 		NULL
 	);
 
+	if (main_hwnd == NULL)
+	{
+		return 0;
+	}
+
 	ShowWindow(main_hwnd, SW_SHOW);
+
+	MSG msg;
+
+	while (GetMessage(&msg, NULL, 0, 0) > 0) {		//메세지 루프
+		DispatchMessage(&msg);
+	}
 }
 
 LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
@@ -45,8 +56,10 @@ LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
 	switch (uMsg) {
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
+			break;
 
 		case WM_DESTROY:
 			PostQuitMessage(0);
+			break;
 	}
 }
