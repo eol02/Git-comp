@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "common.h"
 
-char members[MAX_MEMBERS][20];
-
 int main() {
+    calculate(NULL, 0, 0);
+
     return 0;
 }

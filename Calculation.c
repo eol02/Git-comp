@@ -28,6 +28,22 @@ int calculate(struct Event* event, int memberCount, int eventCount) {    //금�
     return 0;
 }
 
+int optimizeTransfers(struct Event* event, int eventcount, int membercount){
+    //같은 수는 어떻게 체크?
+    int maxP[2] = {1, 0}, maxM[2] = {-1, 0};   //[0] <- 금액, [1] <- 멤버인덱스
+
+    for (int i = 0; i < MAX_MEMBERS; i++){
+        if (totalCost[i] >= maxP[0]){
+            maxP[0] = totalCost[i];
+            maxP[1] = i;
+        }
+        else if(totalCost[i] <= maxM[0]){
+            maxM[0] = totalCost[i];
+            maxM[1] = i;
+        }
+    }
+}
+
 // int optimizeTransfers(struct Event* event, int eventCount, int memberCount) {  //송금 관계 최적화
 //     int expense[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
 //     int* totalCost;
