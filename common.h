@@ -13,7 +13,7 @@ typedef struct Event {
     int payer; // 결제한 멤버의 인덱스 번호
     int participants[MAX_MEMBERS]; // 소비에 참여한 멤버의 인덱스 번호
     int costs[MAX_MEMBERS]; // 멤버별 소비한 금액 (인덱스 동기화)
-    int count; // 해당 이벤트에 참여한 멤버 수
+    int count; // 참여한 멤버 수
 } Event;
 
 /* --------------- manager.c --------------- */

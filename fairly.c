@@ -1,7 +1,6 @@
 #include "common.h"
 
-int saveData(const char* filename);
-int loadData(const char* filename);
+char members[MAX_MEMBERS][20];
 
 int main() {
     return 0;

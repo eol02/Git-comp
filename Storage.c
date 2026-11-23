@@ -2,11 +2,10 @@
 
 #include "common.h"
 
-
 // ================== 데이터 저장 함수 ==========================
-int saveData(const char* filename) {
+int saveData(const char *filename) {
 
-    FILE* fp = fopen(filename, "w");
+    FILE *fp = fopen(filename, "w");
 
     if (fp == NULL) {
         printf("[ERROR] 파일을 열 수 없습니다: %s\n", filename);
@@ -21,11 +20,9 @@ int saveData(const char* filename) {
         fprintf(fp, "%s\n", members[i]);
     }
 
-
     // 2. 전체 결제 이벤트 정보 저장
 
     fprintf(fp, "%d\n", event_count);
-
 
     for (int i = 0; i < event_count; i++) {
 
@@ -53,26 +50,22 @@ int saveData(const char* filename) {
 }
 
 // =================데이터 불러오기 함수==========================
-int loadData(const char* filename) {
+int loadData(const char *filename) {
 
-    FILE* fp = fopen(filename, "r");
-
+    FILE *fp = fopen(filename, "r");
 
     if (fp == NULL) {
         printf("[저장된 파일이 없습니다: %s]\n", filename);
         return 0;
     }
 
-
     // 1. 전체 멤버 정보 불러오기
 
-   
     fscanf(fp, "%d", &member_count);
 
     for (int i = 0; i < member_count; i++) {
         fscanf(fp, "%19s", members[i]);
     }
-
 
     // 2. 전체 결제 이벤트 정보 불러오기
 
@@ -89,7 +82,7 @@ int loadData(const char* filename) {
         for (int j = 0; j < events[i].count; j++) {
             fscanf(fp, "%d", &events[i].participants[j]);
         }
-       
+
         for (int j = 0; j < events[i].count; j++) {
             fscanf(fp, "%d", &events[i].costs[j]);
         }
