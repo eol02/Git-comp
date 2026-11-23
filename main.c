@@ -10,13 +10,13 @@ int WINAPI wWinMain(
 ) {
 	const wchar_t MAIN_CLASS[] = L"Main_Class";
 
-	WNDCLASS wc = { 0 };		//메인 창 클래스
+	WNDCLASSW wc = { 0 };		//메인 창 클래스
 
 	wc.lpfnWndProc = Default_Proc;
 	wc.hInstance = hInstance;
 	wc.lpszClassName = MAIN_CLASS;
 
-	RegisterClass(&wc);
+	RegisterClassW(&wc);
 
 	HWND main_hwnd = CreateWindowExW(		//메인 창 생성
 		0,
@@ -25,7 +25,7 @@ int WINAPI wWinMain(
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		600,
+		700,
 		800,
 		NULL,
 		NULL,
@@ -40,7 +40,7 @@ int WINAPI wWinMain(
 
 	ShowWindow(main_hwnd, SW_SHOW);
 
-	MSG msg;
+	MSG msg = { 0 };
 
 	while (GetMessage(&msg, NULL, 0, 0) > 0) {		//메세지 루프
 		DispatchMessage(&msg);
@@ -54,12 +54,22 @@ LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
 	LPARAM lParam
 ) {
 	switch (uMsg) {
+		case WM_SIZE:
+		{
+			int width = LOWORD(lParam);
+			int height = HIWORD(lParam);
+
+			return 0;
+		}
+
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
-			break;
+			return 0;
 
 		case WM_DESTROY:
 			PostQuitMessage(0);
-			break;
+			return 0;
 	}
+
+	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
