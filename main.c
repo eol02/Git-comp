@@ -1,6 +1,7 @@
 #include <Windows.h>
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(
 	HINSTANCE hInstance,
@@ -16,7 +17,7 @@ int WINAPI wWinMain(
 	wc.hInstance = hInstance;
 	wc.lpszClassName = MAIN_CLASS;
 
-	RegisterClassW(&wc);
+	RegisterClassW(&wc);		//창 클래스 등록
 
 	HWND main_hwnd = CreateWindowExW(		//메인 창 생성
 		0,
@@ -73,3 +74,13 @@ LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
 
 	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
+
+LRESULT CALLBACK Page_Proc(
+	HWND hwnd,
+	UINT uMsg,
+	WPARAM wParam,
+	LPARAM lParam
+) {
+	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
+}
+
