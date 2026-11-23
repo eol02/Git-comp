@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "Storage.h"
 #include "common.h"
 
 // manager.c 없이 Storage.c만 테스트하려고 여기서 임시로 정의
@@ -7,7 +8,6 @@ char members[MAX_MEMBERS][20];
 struct Event events[MAX_EVENTS];
 int member_count = 0;
 int event_count = 0;
-
 
 // 데이터 확인용 함수
 void printAllData() {
@@ -27,8 +27,7 @@ void printAllData() {
     printf("=======================================\n");
 }
 
-
-//테스트용 main
+// 테스트용 main
 int main() {
 
     strcpy(members[0], "강한얼");
