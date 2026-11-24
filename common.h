@@ -30,6 +30,12 @@ extern int member_count; // 전체 인원 수
 */
 void create_event(char title[], int payer, int members_idx[], int checks, int costs[]);
 
+/* 이벤트 수정 함수
+- idx: 수정할 이벤트의 인덱스 값
+- 나머지 create_event와 인자 동일
+*/
+void update_event(int idx, char title[], int payer, int members_idx[], int checks, int costs[]);
+
 // 멤버 추가 함수
 void add_member(char name[]);
 
