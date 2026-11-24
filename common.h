@@ -3,12 +3,14 @@
 
 #define MAX_MEMBERS 100
 #define MAX_EVENTS 100
+#define TITLE_LEN 100
+#define NAME_LEN 20
 
 /*---------------이벤트 구조체 정의----------------*/
 typedef struct Event {
-    char title[MAX_MEMBERS];    //결제 한 장소 혹은 사건의 이름
+    char title[TITLE_LEN];    //결제 한 장소 혹은 사건의 이름
     int payer;                  //결제한 멤버의 인덱스 번호
-    int member[MAX_MEMBERS];    //소비에 참여한 멤버의 인덱스 번호
+    int member[MAX_MEMBERS];    //멤버별 소비에 참여 여부 (1: 참여, 0: 미참여)
     int cost[MAX_MEMBERS];      //멤버별 소비한 금액 (인덱스 동기화)
 } Event;
 
@@ -19,10 +21,13 @@ typedef struct Transfer {
     int amount;  //송금 금액
 } Transfer;
 
-extern char members[MAX_MEMBERS][20];   //전체 멤버 배열
+extern char members[MAX_MEMBERS][NAME_LEN];   //전체 멤버 배열
+
 extern int eventCost[MAX_EVENTS];  //이벤트별 총 결제 금액 배열
+extern Transfer trans[MAX_MEMBERS];  //송금 내역 배열
 
 //Calculation.c
 int calculate(struct Event* event, int memberCount, int eventCount);
+int optimizeTransfers(int memberCount);
 
 #endif

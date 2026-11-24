@@ -1,7 +1,8 @@
 #include "common.h"
 
-static int totalCost[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
+int totalCost[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
 int eventCost[MAX_EVENTS] = {0};
+Transfer trans[MAX_MEMBERS];
 
 int calculate(struct Event* event, int memberCount, int eventCount) {    //금액 합산
     int total = 0;
@@ -28,31 +29,43 @@ int calculate(struct Event* event, int memberCount, int eventCount) {    //금�
     return 0;
 }
 
-int optimizeTransfers(struct Event* event, int eventcount, int membercount){
-    //같은 수는 어떻게 체크?
-    int maxP[2] = {1, 0}, maxM[2] = {-1, 0};   //[0] <- 금액, [1] <- 멤버인덱스
+int optimizeTransfers(int memberCount){
+    int count = 0;
+    int balance[MAX_MEMBERS] = {0};
 
-    for (int i = 0; i < MAX_MEMBERS; i++){
-        if (totalCost[i] >= maxP[0]){
-            maxP[0] = totalCost[i];
-            maxP[1] = i;
-        }
-        else if(totalCost[i] <= maxM[0]){
-            maxM[0] = totalCost[i];
-            maxM[1] = i;
+    for (int i = 0; i < memberCount; i++) balance[i] = totalCost[i];
+
+    for (int i = 0; i< memberCount; i++) {
+        if (balance[i] <= 0) continue;    //송금할 금액이 없는 멤버는 건너뜀
+        for (int j = 0; j < memberCount; j++) {
+            if (balance[j] == -balance[i]) {    //받을 돈 줄 돈이 1:1인 경우
+                trans[count].from = j;
+                trans[count].to = i;
+                trans[count].amount = balance[i];
+                count++;
+                balance[i] = 0;
+                balance[j] = 0;
+                break;
+            }
         }
     }
+
+    while (1) {
+        int t = -1, f = -1;  //t: 받아야하는 멤버, f: 보내야하는 멤버
+        for (int i = 0; i < memberCount; i++) { //최대 금액을 보내야하는 멤버와 받아야하는 멤버 탐색
+            if (balance[i] > 0 && (t == -1 || balance[i] > balance[t])) t = i;
+            if (balance[i] < 0 && (f == -1 || balance[i] < balance[f])) f = i;
+        }
+        if (t == -1 || f == -1) break;  //더 이상 송금할 멤버가 없는 경우 종료
+
+        int amt = (balance[t] < -balance[f]) ? balance[t] : -balance[f];  //송금 금액 결정
+        trans[count].from = f;
+        trans[count].to = t;
+        trans[count].amount = amt;
+        count++;
+        balance[t] -= amt;  //송금 후 금액 업데이트
+        balance[f] += amt;
+    }
+
+    return count;   //송금 횟수 반환
 }
-
-// int optimizeTransfers(struct Event* event, int eventCount, int memberCount) {  //송금 관계 최적화
-//     int expense[MAX_MEMBERS] = {0};  //각 멤버별 송금 관계 +-
-//     int* totalCost;
-
-//     for (int i = 0; i < eventCount; i++) {
-//         totalCost = calculateTotalCost(&event[i], memberCount);
-
-//         for (int j = 0; j < memberCount; j++) { //결제한 멤버들 금액 +
-//             expense[j] += totalCost[j];
-//         }
-//     }
-// }
