@@ -1,10 +1,16 @@
 #include <Windows.h>
 
+HWND main_hwnd = NULL;
+HWND MainPage_hwnd = NULL;
+HWND CreateGroupPage_hwnd = NULL;
+
+
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
+HWND CreateGroupPage(HINSTANCE hInstance, HWND parent);
 
 int WINAPI wWinMain(
 	HINSTANCE hInstance,
@@ -23,7 +29,7 @@ int WINAPI wWinMain(
 	RegisterClassW(&wc);		//창 클래스 등록
 	RegisterPageClass(hInstance);
 
-	HWND main_hwnd = CreateWindowExW(		//메인 창 생성
+	main_hwnd = CreateWindowExW(		//메인 창 생성
 		0,
 		MAIN_CLASS,
 		NULL,
@@ -43,7 +49,8 @@ int WINAPI wWinMain(
 		return 0;
 	}
 
-	HWND MainPage_hwnd = MainPage(hInstance, main_hwnd);
+	MainPage_hwnd = MainPage(hInstance, main_hwnd);
+	CreateGroupPage_hwnd = CreateGroupPage(hInstance, main_hwnd);
 
 	ShowWindow(main_hwnd, SW_SHOW);
 	ShowWindow(MainPage_hwnd, SW_SHOW);
@@ -88,6 +95,17 @@ LRESULT CALLBACK Page_Proc(
 	WPARAM wParam,
 	LPARAM lParam
 ) {
+	switch (uMsg) {
+		case WM_COMMAND:
+			if (HIWORD(wParam) == BN_CLICKED) {
+				switch (LOWORD(wParam)) {
+				case 1001:
+					ShowWindow(MainPage_hwnd, SW_HIDE);
+					ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
+				}
+			}
+	}
+
 	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
 
@@ -97,6 +115,7 @@ BOOL RegisterPageClass(HINSTANCE hInstance) {
 	wc.lpfnWndProc = Page_Proc;
 	wc.hInstance = hInstance;
 	wc.lpszClassName = L"Page_Class";
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
 	RegisterClassW(&wc);
 }
@@ -140,4 +159,10 @@ HWND MainPage(HINSTANCE hInstance, HWND parent) {
 	);
 
 	return MainPage_hwnd;
+}
+
+HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {
+	HWND CreateGroupPage_hwnd = CreatePageWindow(hInstance, parent);
+
+
 }
