@@ -3,6 +3,7 @@
 HWND main_hwnd = NULL;
 HWND MainPage_hwnd = NULL;
 HWND CreateGroupPage_hwnd = NULL;
+HWND EventRegisterPage_hwnd = NULL;
 
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -11,6 +12,7 @@ BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
 HWND CreateGroupPage(HINSTANCE hInstance, HWND parent);
+HWND EventRegisterPage(HINSTANCE hInstance, HWND parent);
 
 int WINAPI wWinMain(
 	HINSTANCE hInstance,
@@ -51,9 +53,11 @@ int WINAPI wWinMain(
 
 	MainPage_hwnd = MainPage(hInstance, main_hwnd);
 	CreateGroupPage_hwnd = CreateGroupPage(hInstance, main_hwnd);
+	EventRegisterPage_hwnd = EventRegisterPage(hInstance, main_hwnd);
 
 	ShowWindow(main_hwnd, SW_SHOW);
-	ShowWindow(MainPage_hwnd, SW_SHOW);
+	//ShowWindow(MainPage_hwnd, SW_SHOW);
+	ShowWindow(EventRegisterPage_hwnd, SW_SHOW);
 
 	MSG msg = { 0 };
 
@@ -140,7 +144,7 @@ HWND CreatePageWindow(HINSTANCE hInstance, HWND parent) {		//페이지 창 생�
 	);
 }
 
-HWND MainPage(HINSTANCE hInstance, HWND parent) {
+HWND MainPage(HINSTANCE hInstance, HWND parent) {			//메인 페이지 함수
 	HWND MainPage_hwnd = CreatePageWindow(hInstance, parent);
 
 	CreateWindowExW(
@@ -161,8 +165,44 @@ HWND MainPage(HINSTANCE hInstance, HWND parent) {
 	return MainPage_hwnd;
 }
 
-HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {
+HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페이지 함수
 	HWND CreateGroupPage_hwnd = CreatePageWindow(hInstance, parent);
 
+	return CreateGroupPage_hwnd;
+}
 
+HWND EventRegisterPage(HINSTANCE hInstance, HWND parent) {				//이벤트 등록 페이지 함수
+	HWND EventRegisterPage_hwnd = CreatePageWindow(hInstance, parent);
+
+	CreateWindowExW(
+		WS_EX_CLIENTEDGE,
+		L"EDIT",
+		NULL,
+		WS_VISIBLE | WS_CHILD | ES_AUTOHSCROLL,
+		50,
+		200,
+		350,
+		30,
+		EventRegisterPage_hwnd,
+		(HMENU)3001,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		WS_EX_CLIENTEDGE,
+		L"EDIT",
+		NULL,
+		WS_VISIBLE | WS_CHILD | ES_AUTOHSCROLL,
+		50,
+		280,
+		350,
+		30,
+		EventRegisterPage_hwnd,
+		(HMENU)3002,
+		hInstance,
+		NULL
+	);
+
+	return EventRegisterPage_hwnd;
 }
