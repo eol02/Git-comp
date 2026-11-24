@@ -41,7 +41,9 @@ void update_event(int idx, char title[], int payer, int members_idx[], int check
 */
 void delete_event(int idx);
 
-// 멤버 추가 함수
+/* 멤버 추가 함수
+- name: 추가할 멤버의 이름
+*/
 void add_member(char name[]);
 
 #endif
