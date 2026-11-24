@@ -2,6 +2,9 @@
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL RegisterPageClass(HINSTANCE hInstance);
+HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
+HWND MainPage(HINSTANCE hInstance, HWND parent);
 
 int WINAPI wWinMain(
 	HINSTANCE hInstance,
@@ -18,12 +21,13 @@ int WINAPI wWinMain(
 	wc.lpszClassName = MAIN_CLASS;
 
 	RegisterClassW(&wc);		//창 클래스 등록
+	RegisterPageClass(hInstance);
 
 	HWND main_hwnd = CreateWindowExW(		//메인 창 생성
 		0,
 		MAIN_CLASS,
 		NULL,
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		700,
@@ -39,7 +43,10 @@ int WINAPI wWinMain(
 		return 0;
 	}
 
+	HWND MainPage_hwnd = MainPage(hInstance, main_hwnd);
+
 	ShowWindow(main_hwnd, SW_SHOW);
+	ShowWindow(MainPage_hwnd, SW_SHOW);
 
 	MSG msg = { 0 };
 
@@ -84,3 +91,53 @@ LRESULT CALLBACK Page_Proc(
 	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
 
+BOOL RegisterPageClass(HINSTANCE hInstance) {
+	WNDCLASSW wc = { 0 };
+
+	wc.lpfnWndProc = Page_Proc;
+	wc.hInstance = hInstance;
+	wc.lpszClassName = L"Page_Class";
+
+	RegisterClassW(&wc);
+}
+
+HWND CreatePageWindow(HINSTANCE hInstance, HWND parent) {		//페이지 창 생성 함수
+	RECT rect;
+	GetClientRect(parent, &rect);
+
+	 return CreateWindowExW(
+		0,
+		L"Page_Class",
+		NULL,
+		WS_CHILD,
+		0,
+		0,
+		rect.right,
+		rect.bottom,
+		parent,
+		NULL,
+		hInstance,
+		NULL
+	);
+}
+
+HWND MainPage(HINSTANCE hInstance, HWND parent) {
+	HWND MainPage_hwnd = CreatePageWindow(hInstance, parent);
+
+	CreateWindowExW(
+		0,
+		L"BUTTON",
+		L"새 모임 생성",
+		WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		50,
+		170,
+		200,
+		40,
+		MainPage_hwnd,
+		(HMENU)1001,
+		hInstance,
+		NULL
+	);
+
+	return MainPage_hwnd;
+}
