@@ -36,6 +36,11 @@ void create_event(char title[], int payer, int members_idx[], int checks, int co
 */
 void update_event(int idx, char title[], int payer, int members_idx[], int checks, int costs[]);
 
+/* 이벤트 삭제 함수
+- idx: 삭제할 이벤트의 인덱스 값
+*/
+void delete_event(int idx);
+
 // 멤버 추가 함수
 void add_member(char name[]);
 

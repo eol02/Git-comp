@@ -37,6 +37,13 @@ void update_event(int idx, char title[], int payer, int members_idx[], int check
     }
 }
 
+void delete_event(int idx) {
+    for (int i = idx; i < event_count - 1; i++) {
+        events[i] = events[i + 1];
+    }
+    event_count--;
+}
+
 // 전체 멤버 추가 함수
 void add_member(char name[]) {
     int idx = member_count++;
