@@ -12,7 +12,7 @@ int saveData(const char *filename) {
         return 0;
     }
 
-    // 1. 전체 멤버 정보 저장
+    // 전체 멤버 정보 저장
 
     fprintf(fp, "%d\n", member_count);
 
@@ -20,24 +20,20 @@ int saveData(const char *filename) {
         fprintf(fp, "%s\n", members[i]);
     }
 
-    // 2. 전체 결제 이벤트 정보 저장
-
+    // 전체 결제 이벤트 정보 저장
     fprintf(fp, "%d\n", event_count);
 
     for (int i = 0; i < event_count; i++) {
 
         fprintf(fp, "%s\n", events[i].title);
-
         fprintf(fp, "%d\n", events[i].payer);
 
-        fprintf(fp, "%d\n", events[i].count);
-
-        for (int j = 0; j < events[i].count; j++) {
+        for (int j = 0; j < member_count; j++) {
             fprintf(fp, "%d ", events[i].participants[j]);
         }
         fprintf(fp, "\n");
 
-        for (int j = 0; j < events[i].count; j++) {
+        for (int j = 0; j < member_count; j++) {
             fprintf(fp, "%d ", events[i].costs[j]);
         }
         fprintf(fp, "\n");
@@ -59,7 +55,7 @@ int loadData(const char *filename) {
         return 0;
     }
 
-    // 1. 전체 멤버 정보 불러오기
+    // 전체 멤버 정보 불러오기
 
     fscanf(fp, "%d", &member_count);
 
@@ -67,23 +63,20 @@ int loadData(const char *filename) {
         fscanf(fp, "%19s", members[i]);
     }
 
-    // 2. 전체 결제 이벤트 정보 불러오기
-
+    // 전체 결제 이벤트 정보 불러오기
+    memset(events, 0, sizeof(events));
     fscanf(fp, "%d", &event_count);
 
     for (int i = 0; i < event_count; i++) {
 
         fscanf(fp, "%99s", events[i].title);
-
         fscanf(fp, "%d", &events[i].payer);
 
-        fscanf(fp, "%d", &events[i].count);
-
-        for (int j = 0; j < events[i].count; j++) {
+        for (int j = 0; j < member_count; j++) {
             fscanf(fp, "%d", &events[i].participants[j]);
         }
 
-        for (int j = 0; j < events[i].count; j++) {
+        for (int j = 0; j < member_count; j++) {
             fscanf(fp, "%d", &events[i].costs[j]);
         }
     }
