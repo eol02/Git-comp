@@ -6,18 +6,27 @@
 
 #define MAX_MEMBERS 100
 #define MAX_EVENTS 100
+#define TITLE_LEN 100
+#define NAME_LEN 20
 
 /* --------------- 이벤트 구조체 정의 ---------------- */
 typedef struct Event {
-    char title[MAX_MEMBERS]; // 결제 한 장소 혹은 사건의 이름
+    char title[TITLE_LEN]; // 결제 한 장소 혹은 사건의 이름
     int payer; // 결제한 멤버의 인덱스 번호
-    int participants[MAX_MEMBERS]; // 소비에 참여한 멤버의 인덱스 번호
+    int participants[MAX_MEMBERS]; // 멤버별 소비에 참여 여부 (1: 참여, 0: 미참여)
     int costs[MAX_MEMBERS]; // 멤버별 소비한 금액 (인덱스 동기화)
 } Event;
 
+/* --------------- 송금 내역 구조체 정의 ---------------- */
+typedef struct Transfer {
+    int from; // 보내는 멤버 인덱스
+    int to; // 받는 멤버 인덱스
+    int amount; // 송금 금액
+} Transfer;
+
 /* --------------- manager.c --------------- */
 
-extern char members[MAX_MEMBERS][20]; // 전체 멤버 배열
+extern char members[MAX_MEMBERS][NAME_LEN]; // 전체 멤버 배열
 extern struct Event events[MAX_EVENTS]; // 이벤트 구조체 배열
 extern int event_count; // 만든 이벤트 개수
 extern int member_count; // 전체 인원 수
@@ -30,7 +39,37 @@ extern int member_count; // 전체 인원 수
 */
 void create_event(char title[], int payer, int members_idx[], int checks, int costs[]);
 
-// 멤버 추가 함수
+/* 이벤트 수정 함수
+- idx: 수정할 이벤트의 인덱스 값
+- 나머지 create_event와 인자 동일
+*/
+void update_event(int idx, char title[], int payer, int members_idx[], int checks, int costs[]);
+
+/* 이벤트 삭제 함수
+- idx: 삭제할 이벤트의 인덱스 값
+*/
+void delete_event(int idx);
+
+/* 멤버 추가 함수
+- name: 추가할 멤버의 이름
+*/
 void add_member(char name[]);
+
+/* --------------- Calculation.c --------------- */
+
+extern int eventCost[MAX_EVENTS]; // 이벤트별 총 결제 금액 배열
+extern Transfer trans[MAX_MEMBERS]; // 송금 내역 배열
+
+int calculate(struct Event *event, int memberCount, int eventCount);
+int optimizeTransfers(int memberCount);
+
+/* --------------- Storage.c --------------- */
+
+int saveData(const char *filename);
+int loadData(const char *filename);
+
+/* --------------- MemberEdit.c --------------- */
+
+int delete_member(int idx);
 
 #endif

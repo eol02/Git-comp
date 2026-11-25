@@ -5,18 +5,22 @@ struct Event events[MAX_EVENTS]; // 이벤트 구조체 배열
 int event_count = 0; // 만든 이벤트 개수
 int member_count = 0; // 전체 인원 수
 
-/* 이벤트 생성 함수
-- checks: ui에서 체크된 인원 수(ex.3)
-- members_idx[]: ui에서 체크된 인원의 인덱스 번호들(ex.{1,2,4})
-- costs[]: members_idx와 같은 순서로 배치된 각각의 금액(ex.{1000,2000,4000}, 즉 1:1000원, 2:2000원, 4:4000원)
-*/
+/* --------------- EVENT --------------- */
+
 void create_event(char title[], int payer, int members_idx[], int checks, int costs[]) {
-    int idx = event_count++; // 새로운 이벤트 인덱스 할당 및 개수 증가
+    int idx = event_count++;
+    update_event(idx, title, payer, members_idx, checks, costs);
+}
 
-    strcpy(events[idx].title, title); // title 지정
-    events[idx].payer = payer; // payer 지정
+void update_event(int idx, char title[], int payer, int members_idx[], int checks, int costs[]) {
+    // 기존 이벤트의 참여자 및 금액 배열 초기화
+    memset(events[idx].participants, 0, sizeof(events[idx].participants));
+    memset(events[idx].costs, 0, sizeof(events[idx].costs));
 
-    // events.member에 members의 인덱스 기준으로 참여여부(1:참여)와 각각의 금액 추가
+    strcpy(events[idx].title, title);
+    events[idx].payer = payer;
+
+    // 체크된 멤버의 참여 여부(1:참여)와 금액 갱신
     for (int i = 0; i < checks; i++) {
         int m_idx = members_idx[i];
         events[idx].participants[m_idx] = 1;
@@ -24,7 +28,16 @@ void create_event(char title[], int payer, int members_idx[], int checks, int co
     }
 }
 
-// 전체 멤버 추가 함수
+void delete_event(int idx) {
+    // 삭제한 위치 뒤의 이벤트들을 한 칸씩 앞으로 이동
+    for (int i = idx; i < event_count - 1; i++) {
+        events[i] = events[i + 1];
+    }
+    event_count--;
+}
+
+/* --------------- MEMBER --------------- */
+
 void add_member(char name[]) {
     int idx = member_count++;
     strcpy(members[idx], name);
