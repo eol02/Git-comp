@@ -11,25 +11,25 @@
 
 /* --------------- 이벤트 구조체 정의 ---------------- */
 typedef struct Event {
-    char title[TITLE_LEN];          // 결제 한 장소 혹은 사건의 이름
-    int payer;                      // 결제한 멤버의 인덱스 번호
-    int participants[MAX_MEMBERS];  // 멤버별 소비에 참여 여부 (1: 참여, 0: 미참여)
-    int costs[MAX_MEMBERS];         // 멤버별 소비한 금액 (인덱스 동기화)
+    char title[TITLE_LEN]; // 결제 한 장소 혹은 사건의 이름
+    int payer; // 결제한 멤버의 인덱스 번호
+    int participants[MAX_MEMBERS]; // 멤버별 소비에 참여 여부 (1: 참여, 0: 미참여)
+    int costs[MAX_MEMBERS]; // 멤버별 소비한 금액 (인덱스 동기화)
 } Event;
 
 /* --------------- 송금 내역 구조체 정의 ---------------- */
 typedef struct Transfer {
-    int from;    // 보내는 멤버 인덱스
-    int to;      // 받는 멤버 인덱스
-    int amount;  // 송금 금액
+    int from; // 보내는 멤버 인덱스
+    int to; // 받는 멤버 인덱스
+    int amount; // 송금 금액
 } Transfer;
 
 /* --------------- manager.c --------------- */
 
 extern char members[MAX_MEMBERS][NAME_LEN]; // 전체 멤버 배열
-extern struct Event events[MAX_EVENTS];     // 이벤트 구조체 배열
-extern int event_count;                     // 만든 이벤트 개수
-extern int member_count;                    // 전체 인원 수
+extern struct Event events[MAX_EVENTS]; // 이벤트 구조체 배열
+extern int event_count; // 만든 이벤트 개수
+extern int member_count; // 전체 인원 수
 
 /* 이벤트 생성 함수
 - payer: 메인 결제자 인덱스(ex.5)
@@ -57,10 +57,10 @@ void add_member(char name[]);
 
 /* --------------- Calculation.c --------------- */
 
-extern int eventCost[MAX_EVENTS];   // 이벤트별 총 결제 금액 배열
+extern int eventCost[MAX_EVENTS]; // 이벤트별 총 결제 금액 배열
 extern Transfer trans[MAX_MEMBERS]; // 송금 내역 배열
 
-int calculate(struct Event* event, int memberCount, int eventCount);
+int calculate(struct Event *event, int memberCount, int eventCount);
 int optimizeTransfers(int memberCount);
 
 #endif
