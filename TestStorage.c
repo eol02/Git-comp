@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "Storage.h"
 #include "common.h"
 
 // 데이터 확인용 함수

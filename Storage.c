@@ -11,9 +11,7 @@ int saveData(const char *filename) {
         printf("[ERROR] 파일을 열 수 없습니다: %s\n", filename);
         return 0;
     }
-
     // 전체 멤버 정보 저장
-
     fprintf(fp, "%d\n", member_count);
 
     for (int i = 0; i < member_count; i++) {
@@ -56,7 +54,6 @@ int loadData(const char *filename) {
     }
 
     // 전체 멤버 정보 불러오기
-
     fscanf(fp, "%d", &member_count);
 
     for (int i = 0; i < member_count; i++) {

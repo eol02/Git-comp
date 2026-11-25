@@ -33,4 +33,9 @@ void create_event(char title[], int payer, int members_idx[], int checks, int co
 // 멤버 추가 함수
 void add_member(char name[]);
 
+int saveData(const char *filename);
+int loadData(const char *filename);
+
+int delete_member(int idx);
+
 #endif
