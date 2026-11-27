@@ -89,8 +89,16 @@ int equalSplit(int total, int checks, int costs[], int unit);
 /*
 - price: 아이템 원래 가격
 - type: 할인 종류 (1: 정액 할인, 2: 정률 할인)
-- value: 할인 값 (0 <= 정액 할인 < price, 0 <= 정률 할인 < 100)
+- value: 할인 값 (0 <= 정액 할인 < price, 0 <= 정률 할인 <= 100)
 */
 int itemDiscount(int price, int type, int value);
+
+/*
+- costs[]: 멤버별 소비 금액
+- checks: 참여한 멤버 수 (할인이 적용될 멤버 수)
+- type: 할인 종류 (1: 정액 할인, 2: 정률 할인)
+- value: 할인 값 (0 <= 정액 할인 < 결제 금액, 0 <= 정률 할인 <= 100)
+*/
+int totalDiscount(int costs[], int checks, int type, int value);
 
 #endif

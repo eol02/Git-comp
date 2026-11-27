@@ -12,9 +12,8 @@ int equalSplit(int total, int checks, int costs[], int unit) {
 
     if (rem > 0) {
         int i = rand() % checks; // 나머지 금액을 랜덤하게 분배. unit이 1인 기준.
-        for (int j = 0; j < rem; j++) {
+        for (int j = 0; j < rem; j++)
             costs[(i + j) % checks] += 1;
-        }
     }
 
     return 0;
