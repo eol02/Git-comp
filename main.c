@@ -118,17 +118,21 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 					case 1001:
 						ShowWindow(MainPage_hwnd, SW_HIDE);
 						ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
+						break;
 
 					case 2001:
 						Member[Member_index] = AddMemberList(hInstance, MemberContent_hwnd);
 						ShowWindow(Member[Member_index], SW_SHOW);
 						Member_index++;
+						break;
 
 					case 2002:
 						DeleteMemberList(Member);
+						break;
 
 					case 2005:
 						SignupMember(Member, members);
+						break;
 				}
 			}
 	}
@@ -303,7 +307,12 @@ void DeleteMemberList(HWND Member[]) {						//멤버 목록 삭제 함수
 void SignupMember(HWND Member[], char Signup[][NAME_LEN]) {					//멤버 등록 함수
 	wchar_t tmp[NAME_LEN];
 
-	for (int i = 0; i < Member_index; i++) {
+	if (Member_index == 0) {
+		MessageBoxW(main_hwnd, L"멤버가 없습니다.", L"생성 오류",
+			MB_OK | MB_ICONWARNING);
+	}
+
+	else for (int i = 0; i < Member_index; i++) {
 		if (GetWindowTextLengthW(GetDlgItem(Member[i], 2004)) == 0) {
 			MessageBoxW(main_hwnd, L"이름을 입력해주세요.", L"입력 오류",
 				MB_OK | MB_ICONWARNING);
@@ -429,10 +438,10 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 		L"BUTTON",
 		L"생성",
 		WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
-		500,
-		750,
-		50,
-		25,
+		530,
+		650,
+		100,
+		35,
 		CreateGroupPage_hwnd,
 		(HMENU)2005,
 		hInstance,
