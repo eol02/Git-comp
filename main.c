@@ -17,6 +17,7 @@ LRESULT CALLBACK ScrollPanel_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
 BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
 HWND AddMemberList(HINSTANCE hInstance, HWND parent);
+void DeleteMemberList(HWND Member[]);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
 HWND CreateGroupPage(HINSTANCE hInstance, HWND parent);
 HWND EventRegisterPage(HINSTANCE hInstance, HWND parent);
@@ -120,6 +121,8 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 					ShowWindow(Member[Member_index], SW_SHOW);
 					Member_index++;
 				}
+				case 2002:
+					DeleteMemberList(Member);
 			}
 	}
 
@@ -264,12 +267,30 @@ HWND AddMemberList(HINSTANCE hInstance, HWND parent) {		//멤버 목록 추가 �
 		15,
 		15,
 		Member,
-		NULL,
+		(HMENU)2003,
 		hInstance,
 		NULL
 	);
 
 	return Member;
+}
+
+void DeleteMemberList(HWND Member[]) {						//멤버 목록 삭제 함수
+	for (int i = Member_index - 1; i >= 0; i--) {
+		if (SendMessageW(GetDlgItem(Member[i], 2003), BM_GETCHECK, 0, 0) == BST_CHECKED) {
+			DestroyWindow(Member[i]);
+			
+			for (int j = i; j < Member_index; j++) {
+				Member[j] = Member[j + 1];
+
+				SetWindowPos(Member[j], NULL,
+					15, 10 + j * (55 + 5), 0, 0,
+					SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+			}
+
+			Member_index--;
+		}
+	}
 }
 
 HWND MainPage(HINSTANCE hInstance, HWND parent) {			//메인 페이지 함수
@@ -346,6 +367,21 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 		17,
 		CreateGroupPage_hwnd,
 		(HMENU)2001,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		0,
+		L"BUTTON",
+		L"-",
+		WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		63,
+		220,
+		17,
+		17,
+		CreateGroupPage_hwnd,
+		(HMENU)2002,
 		hInstance,
 		NULL
 	);
