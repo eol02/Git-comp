@@ -2,7 +2,9 @@
 #define COMMON_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_MEMBERS 100
 #define MAX_EVENTS 100
@@ -71,5 +73,15 @@ int loadData(const char *filename);
 /* --------------- MemberEdit.c --------------- */
 
 int delete_member(int idx);
+
+/* ---------------- EqualSplit.c --------------- */
+
+/*균등 분할 함수
+- total: 분배 금액
+- checks: 분배할 인원 수(check된 인원 수)
+- costs[]: 분배할 인원들의 금액을 담을 배열(입력시에 기존 누적된 금액을 입력)
+- unit: 분배 금액 단위 (잉여 금액의 자릿수) (일단은 1로 고정, 후에 분할 단위를 추가 할 경우 사용)
+*/
+int equalSplit(int total, int checks, int costs[], int unit);
 
 #endif
