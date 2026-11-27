@@ -8,6 +8,7 @@ HWND EventRegisterPage_hwnd = NULL;
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK ScrollPanel_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
@@ -56,8 +57,8 @@ int WINAPI wWinMain(
 	EventRegisterPage_hwnd = EventRegisterPage(hInstance, main_hwnd);
 
 	ShowWindow(main_hwnd, SW_SHOW);
-	//ShowWindow(MainPage_hwnd, SW_SHOW);
-	ShowWindow(EventRegisterPage_hwnd, SW_SHOW);
+	ShowWindow(MainPage_hwnd, SW_SHOW);
+	//ShowWindow(EventRegisterPage_hwnd, SW_SHOW);
 
 	MSG msg = { 0 };
 
@@ -93,7 +94,7 @@ LRESULT CALLBACK Default_Proc(		//기본 창 프로시저
 	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
 
-LRESULT CALLBACK Page_Proc(
+LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 	HWND hwnd,
 	UINT uMsg,
 	WPARAM wParam,
@@ -111,6 +112,66 @@ LRESULT CALLBACK Page_Proc(
 	}
 
 	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK ScrollPanel_Proc(			//스크롤 패널 프로시저
+	HWND hwnd,
+	UINT uMsg,
+	WPARAM wParam,
+	LPARAM lParam
+) {
+	SCROLLINFO si = { 0 };
+
+	si.cbSize = sizeof(SCROLLINFO);
+	si.fMask = SIF_ALL;
+	GetScrollInfo(hwnd, SB_VERT, &si);
+
+	switch(uMsg){
+		case WM_CREATE:
+			si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+			si.nMin = 0;
+			si.nMax = 999;
+			si.nPage = 350;
+			si.nPos = 0;
+
+			SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			
+			return 0;
+
+		case WM_VSCROLL:
+			switch (LOWORD(wParam)) {
+				case SB_LINEUP:
+					si.nPos -= 10;
+					break;
+
+				case SB_LINEDOWN:
+					si.nPos += 10;
+					break;
+
+				case SB_PAGEUP:
+					si.nPos -= (int)si.nPage;
+					break;
+
+				case SB_PAGEDOWN:
+					si.nPos += (int)si.nPage;
+					break;
+
+				case SB_THUMBTRACK:
+					si.nPos = si.nTrackPos;
+					break;
+			}
+			
+			SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			return 0;
+
+		case WM_MOUSEWHEEL:
+			si.nPos -= GET_WHEEL_DELTA_WPARAM(wParam);
+			SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			return 0;
+	}
+
+
+	return DefWindowProcW(hwnd, uMsg, wParam, lParam);		//TODO: 스크롤 패널 작동 로직 추가
 }
 
 BOOL RegisterPageClass(HINSTANCE hInstance) {
@@ -167,6 +228,29 @@ HWND MainPage(HINSTANCE hInstance, HWND parent) {			//메인 페이지 함수
 
 HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페이지 함수
 	HWND CreateGroupPage_hwnd = CreatePageWindow(hInstance, parent);
+
+	WNDCLASSW wc = { 0 };
+
+	wc.lpfnWndProc = ScrollPanel_Proc;
+	wc.hInstance = hInstance;
+	wc.lpszClassName = L"ScrollPanel_Class";
+
+	RegisterClassW(&wc);
+
+	CreateWindowExW(
+		0,
+		L"ScrollPanel_Class",
+		NULL,
+		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL,
+		40,
+		250,
+		600,
+		350,
+		CreateGroupPage_hwnd,
+		NULL,
+		hInstance,
+		NULL
+	);
 
 	return CreateGroupPage_hwnd;
 }
