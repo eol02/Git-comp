@@ -9,6 +9,7 @@ HWND MainPage_hwnd = NULL;
 HWND CreateGroupPage_hwnd = NULL;
 HWND EventRegisterPage_hwnd = NULL;
 HWND MemberPanel_hwnd = NULL;
+HWND MemberContent_hwnd = NULL;
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance);
@@ -115,7 +116,7 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 					ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
 
 				case 2001:
-					Member[Member_index] = AddMemberList(hInstance, MemberPanel_hwnd);
+					Member[Member_index] = AddMemberList(hInstance, MemberContent_hwnd);
 					ShowWindow(Member[Member_index], SW_SHOW);
 					Member_index++;
 				}
@@ -172,17 +173,23 @@ LRESULT CALLBACK ScrollPanel_Proc(			//스크롤 패널 프로시저
 					break;
 			}
 			
-			SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			si.nPos = SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			SetWindowPos(MemberContent_hwnd, NULL,
+				0, -si.nPos, 0, 0,
+				SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 			return 0;
 
 		case WM_MOUSEWHEEL:
 			si.nPos -= GET_WHEEL_DELTA_WPARAM(wParam);
-			SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			si.nPos = SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
+			SetWindowPos(MemberContent_hwnd, NULL,
+				0, -si.nPos, 0, 0,
+				SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 			return 0;
 	}
 
 
-	return DefWindowProcW(hwnd, uMsg, wParam, lParam);		//TODO: 스크롤 패널 작동 로직 추가
+	return DefWindowProcW(hwnd, uMsg, wParam, lParam);
 }
 
 BOOL RegisterPageClass(HINSTANCE hInstance) {
@@ -294,6 +301,7 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 	wc.lpfnWndProc = ScrollPanel_Proc;
 	wc.hInstance = hInstance;
 	wc.lpszClassName = L"ScrollPanel_Class";
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
 	RegisterClassW(&wc);
 
@@ -307,6 +315,21 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 		600,
 		350,
 		CreateGroupPage_hwnd,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	MemberContent_hwnd = CreateWindowExW(
+		0,
+		L"STATIC",
+		NULL,
+		WS_CHILD | WS_VISIBLE,
+		0,
+		0,
+		600,
+		6020,
+		MemberPanel_hwnd,
 		NULL,
 		hInstance,
 		NULL
