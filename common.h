@@ -84,4 +84,13 @@ int delete_member(int idx);
 */
 int equalSplit(int total, int checks, int costs[], int unit);
 
+/* ---------------- Discount.c --------------- */
+
+/*
+- price: 아이템 원래 가격
+- type: 할인 종류 (1: 정액 할인, 2: 정률 할인)
+- value: 할인 값 (0 <= 정액 할인 < price, 0 <= 정률 할인 < 100)
+*/
+int itemDiscount(int price, int type, int value);
+
 #endif
