@@ -4,6 +4,7 @@
 HWND Member[MAX_MEMBERS] = { 0 };
 int Member_index = 0;
 
+
 HWND main_hwnd = NULL;
 HWND MainPage_hwnd = NULL;
 HWND CreateGroupPage_hwnd = NULL;
@@ -18,6 +19,7 @@ BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
 HWND AddMemberList(HINSTANCE hInstance, HWND parent);
 void DeleteMemberList(HWND Member[]);
+void SignupMember(HWND Member[], char Signup[][NAME_LEN]);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
 HWND CreateGroupPage(HINSTANCE hInstance, HWND parent);
 HWND EventRegisterPage(HINSTANCE hInstance, HWND parent);
@@ -70,6 +72,7 @@ int WINAPI wWinMain(
 	MSG msg = { 0 };
 
 	while (GetMessage(&msg, NULL, 0, 0) > 0) {		//메세지 루프
+		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 }
@@ -112,17 +115,21 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 		case WM_COMMAND:
 			if (HIWORD(wParam) == BN_CLICKED) {
 				switch (LOWORD(wParam)) {
-				case 1001:
-					ShowWindow(MainPage_hwnd, SW_HIDE);
-					ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
+					case 1001:
+						ShowWindow(MainPage_hwnd, SW_HIDE);
+						ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
 
-				case 2001:
-					Member[Member_index] = AddMemberList(hInstance, MemberContent_hwnd);
-					ShowWindow(Member[Member_index], SW_SHOW);
-					Member_index++;
+					case 2001:
+						Member[Member_index] = AddMemberList(hInstance, MemberContent_hwnd);
+						ShowWindow(Member[Member_index], SW_SHOW);
+						Member_index++;
+
+					case 2002:
+						DeleteMemberList(Member);
+
+					case 2005:
+						SignupMember(Member, members);
 				}
-				case 2002:
-					DeleteMemberList(Member);
 			}
 	}
 
@@ -252,7 +259,7 @@ HWND AddMemberList(HINSTANCE hInstance, HWND parent) {		//멤버 목록 추가 �
 		450,
 		20,
 		Member,
-		NULL,
+		(HMENU)2004,
 		hInstance,
 		NULL
 	);
@@ -290,6 +297,37 @@ void DeleteMemberList(HWND Member[]) {						//멤버 목록 삭제 함수
 
 			Member_index--;
 		}
+	}
+}
+
+void SignupMember(HWND Member[], char Signup[][NAME_LEN]) {					//멤버 등록 함수
+	wchar_t tmp[NAME_LEN];
+
+	for (int i = 0; i < Member_index; i++) {
+		if (GetWindowTextLengthW(GetDlgItem(Member[i], 2004)) == 0) {
+			MessageBoxW(main_hwnd, L"이름을 입력해주세요.", L"입력 오류",
+				MB_OK | MB_ICONWARNING);
+		}
+
+		else if (GetWindowTextLengthW(GetDlgItem(Member[i], 2004)) >= NAME_LEN) {
+			MessageBoxW(main_hwnd, L"입력 범위를 초과하였습니다.", L"입력 오류",
+				MB_OK | MB_ICONWARNING);
+		}
+	}
+
+	for (int i = 0; i < Member_index; i++) {
+		GetWindowTextW(GetDlgItem(Member[i], 2004), tmp, NAME_LEN);
+
+		WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			tmp,
+			-1,
+			Signup[i],
+			NAME_LEN,
+			NULL,
+			NULL
+		);
 	}
 }
 
@@ -382,6 +420,21 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 		17,
 		CreateGroupPage_hwnd,
 		(HMENU)2002,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		0,
+		L"BUTTON",
+		L"생성",
+		WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		500,
+		750,
+		50,
+		25,
+		CreateGroupPage_hwnd,
+		(HMENU)2005,
 		hInstance,
 		NULL
 	);
