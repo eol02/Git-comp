@@ -1,16 +1,21 @@
 #include <Windows.h>
+#include "common.h"
+
+HWND Member[MAX_MEMBERS] = { 0 };
+int Member_index = 0;
 
 HWND main_hwnd = NULL;
 HWND MainPage_hwnd = NULL;
 HWND CreateGroupPage_hwnd = NULL;
 HWND EventRegisterPage_hwnd = NULL;
-
+HWND MemberPanel_hwnd = NULL;
 
 LRESULT CALLBACK Default_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK Page_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, HINSTANCE hInstance);
 LRESULT CALLBACK ScrollPanel_Proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL RegisterPageClass(HINSTANCE hInstance);
 HWND CreatePageWindow(HINSTANCE hInstance, HWND parent);
+HWND AddMemberList(HINSTANCE hInstance, HWND parent);
 HWND MainPage(HINSTANCE hInstance, HWND parent);
 HWND CreateGroupPage(HINSTANCE hInstance, HWND parent);
 HWND EventRegisterPage(HINSTANCE hInstance, HWND parent);
@@ -98,7 +103,8 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 	HWND hwnd,
 	UINT uMsg,
 	WPARAM wParam,
-	LPARAM lParam
+	LPARAM lParam,
+	HINSTANCE hInstance
 ) {
 	switch (uMsg) {
 		case WM_COMMAND:
@@ -107,6 +113,11 @@ LRESULT CALLBACK Page_Proc(			//페이지 창 프로시저
 				case 1001:
 					ShowWindow(MainPage_hwnd, SW_HIDE);
 					ShowWindow(CreateGroupPage_hwnd, SW_SHOW);
+
+				case 2001:
+					Member[Member_index] = AddMemberList(hInstance, MemberPanel_hwnd);
+					ShowWindow(Member[Member_index], SW_SHOW);
+					Member_index++;
 				}
 			}
 	}
@@ -130,7 +141,7 @@ LRESULT CALLBACK ScrollPanel_Proc(			//스크롤 패널 프로시저
 		case WM_CREATE:
 			si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 			si.nMin = 0;
-			si.nMax = 999;
+			si.nMax = 6020;
 			si.nPage = 350;
 			si.nPos = 0;
 
@@ -205,6 +216,55 @@ HWND CreatePageWindow(HINSTANCE hInstance, HWND parent) {		//페이지 창 생�
 	);
 }
 
+HWND AddMemberList(HINSTANCE hInstance, HWND parent) {		//멤버 목록 추가 함수
+	HWND Member = CreateWindowExW(
+		0,
+		L"STATIC",
+		NULL,
+		WS_CHILD | WS_BORDER,
+		15,
+		10 + Member_index * (55 + 5),
+		550,
+		55,
+		parent,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		WS_EX_CLIENTEDGE,
+		L"EDIT",
+		NULL,
+		WS_VISIBLE | WS_CHILD | ES_AUTOHSCROLL,
+		40,
+		15,
+		450,
+		20,
+		Member,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		0,
+		L"BUTTON",
+		NULL,
+		WS_VISIBLE | WS_CHILD | BS_AUTOCHECKBOX,
+		10,
+		20,
+		15,
+		15,
+		Member,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	return Member;
+}
+
 HWND MainPage(HINSTANCE hInstance, HWND parent) {			//메인 페이지 함수
 	HWND MainPage_hwnd = CreatePageWindow(hInstance, parent);
 
@@ -237,7 +297,7 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 
 	RegisterClassW(&wc);
 
-	CreateWindowExW(
+	MemberPanel_hwnd = CreateWindowExW(
 		0,
 		L"ScrollPanel_Class",
 		NULL,
@@ -248,6 +308,21 @@ HWND CreateGroupPage(HINSTANCE hInstance, HWND parent) {			//그룹 생성 페�
 		350,
 		CreateGroupPage_hwnd,
 		NULL,
+		hInstance,
+		NULL
+	);
+
+	CreateWindowExW(
+		0,
+		L"BUTTON",
+		L"+",
+		WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		40,
+		220,
+		17,
+		17,
+		CreateGroupPage_hwnd,
+		(HMENU)2001,
 		hInstance,
 		NULL
 	);
