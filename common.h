@@ -72,4 +72,28 @@ int loadData(const char *filename);
 
 int delete_member(int idx);
 
+/* --------------- Session.c --------------- */
+
+#define MAX_SESSIONS 20
+
+typedef struct Session {
+    char name[NAME_LEN];
+    char members[MAX_MEMBERS][NAME_LEN];
+    Event events[MAX_EVENTS];
+    int member_count;
+    int event_count;
+} Session;
+
+extern Session sessions[MAX_SESSIONS]; // 전체 세션 배열
+extern int session_count; // 전체 세션 개수
+extern int current_session; // 현재 선택된 세션 번호
+
+void save_to_session(int idx);
+void load_from_session(int idx);
+int create_session(char name[]);
+void print_session_list(void);
+int select_session(int index);
+int save_current_session(void);
+int load_session(const char *filename, char name[]);
+
 #endif
