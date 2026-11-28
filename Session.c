@@ -66,7 +66,7 @@ void print_session_list(void) {
     }
 }
 
-// index번째(1번부터) 세션으로 전환
+// index번째 세션으로 전환
 int select_session(int index) {
     int idx = index - 1;
 
